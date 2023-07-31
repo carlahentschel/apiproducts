@@ -2,6 +2,7 @@ package com.apiprodutos.produtos.models;
 
 import com.apiprodutos.produtos.dtos.CreateProduct;
 import com.apiprodutos.produtos.dtos.EditProduct;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,8 @@ public class Product {
     private Brand brand;
     private int barcode;
     @OneToMany
+    @JsonIgnore
+    @JoinColumn(name="id_categories", referencedColumnName = "id")
     private List<Category> categories;
 
     public Product(CreateProduct newProduct) {

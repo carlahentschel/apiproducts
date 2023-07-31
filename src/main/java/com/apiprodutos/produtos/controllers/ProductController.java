@@ -2,6 +2,7 @@ package com.apiprodutos.produtos.controllers;
 
 import com.apiprodutos.produtos.dtos.CreateProduct;
 import com.apiprodutos.produtos.dtos.EditProduct;
+import com.apiprodutos.produtos.dtos.OutputProduct;
 import com.apiprodutos.produtos.dtos.ResponseError;
 import com.apiprodutos.produtos.models.Product;
 import com.apiprodutos.produtos.repositories.ProductRepository;
@@ -37,7 +38,7 @@ public class ProductController {
 
         var product = productRepository.save(new Product(newProduct));
 
-        return ResponseEntity.ok().body(product);
+        return ResponseEntity.ok().body(new OutputProduct(product));
 
     }
 
@@ -48,7 +49,14 @@ public class ProductController {
 
         product.update(newProduct);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new OutputProduct(product));
+    }
+
+    @GetMapping
+    public ResponseEntity getAll(){
+        return ResponseEntity.ok().body(
+                productRepository.findAll().stream().map(OutputProduct::new).toList()
+        );
     }
 
 
