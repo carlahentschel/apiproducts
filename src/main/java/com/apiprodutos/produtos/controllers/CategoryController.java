@@ -19,29 +19,31 @@ public class CategoryController {
     @Autowired
     private CategoryRepository repository;
 
-@PostMapping
-    public ResponseEntity createCategory(@RequestBody @Valid CreateCategory newCategory){
-    if(repository.existsByName(newCategory.name())){
-        return ResponseEntity.badRequest().body(new ResponseError("Essa categoria já existe"));
+    @GetMapping
+    public ResponseEntity findAll() {
+        return ResponseEntity.ok().body(repository.findAll());
     }
-    var category = new Category(newCategory);
 
-    category = repository.save(category);
+    @PostMapping
+    public ResponseEntity createCategory(@RequestBody @Valid CreateCategory newCategory) {
+        if (repository.existsByName(newCategory.name())) {
+            return ResponseEntity.badRequest().body(new ResponseError("Essa categoria já existe"));
+        }
 
-    return ResponseEntity.ok().body(category);
-}
+        var category = repository.save(new Category(newCategory));
+
+        return ResponseEntity.ok().body(category);
+    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteCategory(@PathVariable @Valid UUID id){
-        if(!repository.existsById(id)){
+    public ResponseEntity deleteCategory(@PathVariable @Valid UUID id) {
+        if (!repository.existsById(id)) {
             return ResponseEntity.badRequest().body(new ResponseError("Essa categoria não existe"));
         }
+        
         repository.deleteById(id);
 
         return ResponseEntity.noContent().build();
     }
-
-@GetMapping
-    public ResponseEntity getAll(){return ResponseEntity.ok().body(repository.findAll());}
-
 }
+

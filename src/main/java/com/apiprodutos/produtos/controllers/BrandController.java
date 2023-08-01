@@ -17,9 +17,15 @@ public class BrandController {
     @Autowired
     private BrandRepository repository;
 
+
+    @GetMapping
+    public ResponseEntity getBrand() {
+        return ResponseEntity.ok().body(repository.findAll());
+    }
+
     @PostMapping
-    public ResponseEntity createBrand(@RequestBody @Valid CreateBrand newBrand){
-        if(repository.existsByName(newBrand.name())){
+    public ResponseEntity createBrand(@RequestBody @Valid CreateBrand newBrand) {
+        if (repository.existsByName(newBrand.name())) {
             return ResponseEntity.badRequest().body(new ResponseError("Essa marca já existe"));
         }
         var brand = new Brand(newBrand);
@@ -28,9 +34,9 @@ public class BrandController {
         return ResponseEntity.ok().body(brand);
     }
 
-    @DeleteMapping ("/{id}")
-    public ResponseEntity deleteBrand(@PathVariable @Valid UUID id){
-        if(!repository.existsById(id)){
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteBrand(@PathVariable @Valid UUID id) {
+        if (!repository.existsById(id)) {
             return ResponseEntity.badRequest().body(new ResponseError("Essa marca não existe"));
         }
         repository.deleteById(id);
@@ -38,8 +44,4 @@ public class BrandController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity getBrand(){
-        return ResponseEntity.ok().body(repository.findAll());
-    }
 }

@@ -20,44 +20,36 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @GetMapping
+    public ResponseEntity findAll() {
+        return ResponseEntity.ok().body(
+                productRepository.findAll().stream().map(OutputProduct::new).toList()
+        );
+    }
+
     @PostMapping
     @Transactional
-    public ResponseEntity createProduct (@Valid @RequestBody CreateProduct newProduct){
-
-        if(productRepository.existsByBarcode(newProduct.barcode())){
+    public ResponseEntity createProduct(@Valid @RequestBody CreateProduct newProduct) {
+        if (productRepository.existsByBarcode(newProduct.barcode())) {
             return ResponseEntity.badRequest().body(new ResponseError("Código de barras já cadastrado!"));
-
         }
 
-        if(productRepository.existsByNameAndBrand(newProduct.name(), newProduct.brand())){
+        if (productRepository.existsByNameAndBrand(newProduct.name(), newProduct.brand())) {
             return ResponseEntity.badRequest().body(new ResponseError("Produto já cadastrado!"));
-
         }
-
-        System.out.println(newProduct);
 
         var product = productRepository.save(new Product(newProduct));
 
         return ResponseEntity.ok().body(new OutputProduct(product));
-
     }
 
     @PutMapping("{idProduct}")
     @Transactional
-    public  ResponseEntity editProduct (@Valid @RequestBody EditProduct newProduct, @PathVariable UUID idProduct){
+    public ResponseEntity editProduct(@Valid @RequestBody EditProduct newProduct, @PathVariable UUID idProduct) {
         var product = productRepository.getReferenceById(idProduct);
 
         product.update(newProduct);
 
         return ResponseEntity.ok().body(new OutputProduct(product));
     }
-
-    @GetMapping
-    public ResponseEntity getAll(){
-        return ResponseEntity.ok().body(
-                productRepository.findAll().stream().map(OutputProduct::new).toList()
-        );
-    }
-
-
 }

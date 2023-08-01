@@ -32,7 +32,7 @@ public class Product {
     private int barcode;
     @OneToMany
     @JsonIgnore
-    @JoinColumn(name="id_categories", referencedColumnName = "id")
+    @JoinColumn(name = "id")
     private List<Category> categories;
 
     public Product(CreateProduct newProduct) {
@@ -42,12 +42,12 @@ public class Product {
         brand = newProduct.brand();
         barcode = newProduct.barcode();
         categories = newProduct.categories();
-        if(categories == null) categories = new ArrayList<>();
+        if (categories == null) categories = new ArrayList<>();
     }
 
 
-    public void update(EditProduct p){
-        name =  p.name();
+    public void update(EditProduct p) {
+        name = p.name();
         price = p.price();
         stock = p.stock();
         categories = p.categories();
