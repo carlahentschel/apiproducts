@@ -26,7 +26,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity createCategory(@RequestBody @Valid CreateCategory newCategory) {
-        if (repository.existsByName(newCategory.name())) {
+        if (repository.existsByNameIgnoreCase(newCategory.name())) {
             return ResponseEntity.badRequest().body(new ResponseError("Essa categoria já existe"));
         }
 

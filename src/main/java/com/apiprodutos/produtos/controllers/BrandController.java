@@ -25,7 +25,7 @@ public class BrandController {
 
     @PostMapping
     public ResponseEntity createBrand(@RequestBody @Valid CreateBrand newBrand) {
-        if (repository.existsByName(newBrand.name())) {
+        if (repository.existsByNameIgnoreCase(newBrand.name())) {
             return ResponseEntity.badRequest().body(new ResponseError("Essa marca já existe"));
         }
         var brand = new Brand(newBrand);
